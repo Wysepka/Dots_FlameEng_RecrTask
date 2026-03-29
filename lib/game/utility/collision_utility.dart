@@ -33,6 +33,105 @@ class CollisionUtility{
     );
   }
 
+  /// Calculates bounced velocity for collision against another actor.
+  ///
+  /// Assumptions:
+  /// - [selfPosition] and [otherPosition] are component centers
+  /// - sizes are used as simple circular approximation
+  /// - [velocity] is the current velocity of "self"
+  /// - [otherVelocity] is optional; if omitted, other actor is treated as static
+  ///
+  /// The collision normal points from the other actor toward self, so the
+  /// returned velocity is the bounced velocity of self.
+  static Vector2 calculateBounceVelocityFromActor({
+    required Vector2 selfPosition,
+    required Vector2 selfSize,
+    required Vector2 otherPosition,
+    required Vector2 otherSize,
+    required Vector2 velocity,
+    Vector2? otherVelocity,
+    double restitution = 1.0,
+    bool onlyWhenApproaching = true,
+  }) {
+    final Vector2? normal = _calculateActorCollisionNormal(
+      selfPosition: selfPosition,
+      otherPosition: otherPosition,
+    );
+
+    if (normal == null) {
+      return velocity.clone();
+    }
+
+    final Vector2 relativeVelocity =
+        velocity - (otherVelocity ?? Vector2.zero());
+
+    final double approachSpeed = relativeVelocity.dot(normal);
+
+    // If > 0, self is already moving away from the collision surface
+    // relative to the other actor, so do not bounce again.
+    if (onlyWhenApproaching && approachSpeed >= 0) {
+      return velocity.clone();
+    }
+
+    final Vector2 reflectedRelative = reflect(
+      velocity: relativeVelocity,
+      normal: normal,
+      restitution: restitution,
+    );
+
+    return reflectedRelative + (otherVelocity ?? Vector2.zero());
+  }
+
+  /// Resolves overlap by pushing self outside the other actor.
+  ///
+  /// Uses circular approximation based on half of the larger size dimension.
+  /// Useful after collision to reduce sticking / repeated collision callbacks.
+  static Vector2 separateOverlappingActors({
+    required Vector2 selfPosition,
+    required Vector2 selfSize,
+    required Vector2 otherPosition,
+    required Vector2 otherSize,
+    double extraSeparation = 0.0,
+  }) {
+    final Vector2 delta = selfPosition - otherPosition;
+    final double distance = delta.length;
+
+    final double selfRadius = _approxRadius(selfSize);
+    final double otherRadius = _approxRadius(otherSize);
+    final double minDistance = selfRadius + otherRadius + extraSeparation;
+
+    Vector2 normal;
+    if (distance == 0) {
+      normal = Vector2(1, 0);
+    } else {
+      normal = delta / distance;
+    }
+
+    if (distance >= minDistance) {
+      return selfPosition.clone();
+    }
+
+    return otherPosition + normal * minDistance;
+  }
+
+  /// Returns collision normal from other actor toward self actor.
+  static Vector2? _calculateActorCollisionNormal({
+    required Vector2 selfPosition,
+    required Vector2 otherPosition,
+  }) {
+    final Vector2 delta = selfPosition - otherPosition;
+
+    if (delta.length2 == 0) {
+      return null;
+    }
+
+    return delta.normalized();
+  }
+
+  static double _approxRadius(Vector2 size) {
+    return (size.x > size.y ? size.x : size.y) / 2;
+  }
+
   /// Standard vector reflection:
   /// R = V - (1 + e) * dot(V, N) * N
   ///
@@ -50,6 +149,8 @@ class CollisionUtility{
 
     return velocity - n * ((1 + restitution) * dot);
   }
+  //This comment is for above
+  //(0.5,0.5) - (-1,0) * (1+1) * -0.5 = (0.5 , 0.5) - (-1 , 0) * -1 = (0.5 , 0.5) - 1 = (-0.5 , -0.5)
 
   /// Returns wall normal for the screen edge currently penetrated/touched.
   ///

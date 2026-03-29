@@ -1,8 +1,9 @@
 import 'package:dots_flameeng_recrtask/game/components/player_sprite_component.dart';
+import 'package:dots_flameeng_recrtask/game/managers/actors_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 
-class DotsWorld extends World{
+class DotsWorld extends World with HasCollisionDetection{
 
   late final Rect cameraBounds;
 
@@ -10,6 +11,7 @@ class DotsWorld extends World{
   Future<void> onLoad() async{
     await super.onLoad();
 
-    add(PlayerSpriteComponent(position: Vector2.zero() , cameraBounds: cameraBounds));
+    add(ActorsManager());
+    add(ScreenHitbox());
   }
 }

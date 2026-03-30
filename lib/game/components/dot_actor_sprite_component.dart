@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:dots_flameeng_recrtask/core/app_logger.dart';
 import 'package:dots_flameeng_recrtask/game/components/dot_sprite_component.dart';
 import 'package:dots_flameeng_recrtask/game/config/game_constants.dart';
+import 'package:dots_flameeng_recrtask/game/managers/actors_manager.dart';
 import 'package:dots_flameeng_recrtask/game/utility/collision_utility.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -71,6 +73,9 @@ class DotActorSpriteComponent extends DotSpriteComponent with CollisionCallbacks
       return;
     }
     _isDead = true;
+    AppLogger.i("Removing ${toString()} , from tree");
+    final manager = parent as ActorsManager;
+    manager.removeFromSpawnedActors(this);
     removeFromParent();
   }
 }

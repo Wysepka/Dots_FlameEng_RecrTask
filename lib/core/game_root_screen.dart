@@ -69,7 +69,6 @@ class GameRootScreen extends StatelessWidget{
 
   GameCallbacksContainer _initializeGameCallbacksContainer(BuildContext buildContext){
     GameStatsBloc gameStatsBloc = buildContext.read<GameStatsBloc>();
-    GameLifecycleBloc gameLifecycleBloc = buildContext.read<GameLifecycleBloc>();
     final playerCallbacks = PlayerCallbacksContainer(
       onPlayerLivesDecrementCallback: () { gameStatsBloc.add(PlayerHealthDecrementEvent(livesCount: gameStatsBloc.state.currentPlayerLives)); },
       onPlayerScoreIncrement: () { gameStatsBloc.add(PlayerScoreUpEvent(scoreCount: gameStatsBloc.state.currentPlayerScore)); }

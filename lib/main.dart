@@ -1,12 +1,12 @@
 import 'package:dots_flameeng_recrtask/blocs/game_lifecycle/game_lifecycle_bloc.dart';
+import 'package:dots_flameeng_recrtask/blocs/game_stats/game_stats_bloc.dart';
 import 'package:dots_flameeng_recrtask/core/app_logger.dart';
 import 'package:dots_flameeng_recrtask/core/game_root_screen.dart';
-import 'package:dots_flameeng_recrtask/ui/game_start_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const DotsApp());
+  runApp(DotsApp());
 }
 
 class DotsApp extends StatelessWidget {
@@ -21,7 +21,10 @@ class DotsApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<GameLifecycleBloc>(
-            create: (_) => GameLifecycleBloc(),
+          create: (_) => GameLifecycleBloc(),
+        ),
+        BlocProvider<GameStatsBloc>(
+            create: (_) => GameStatsBloc(),
         ),
       ],
       child: MaterialApp(

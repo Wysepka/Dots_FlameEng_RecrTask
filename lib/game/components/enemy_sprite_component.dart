@@ -1,12 +1,6 @@
-import 'dart:math';
-
 import 'package:dots_flameeng_recrtask/game/components/dot_actor_sprite_component.dart';
-import 'package:dots_flameeng_recrtask/game/components/dot_sprite_component.dart';
 import 'package:dots_flameeng_recrtask/game/config/game_constants.dart';
-import 'package:dots_flameeng_recrtask/game/utility/collision_utility.dart';
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/extensions.dart';
 
 class EnemySpriteComponent extends DotActorSpriteComponent{
 

@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:dots_flameeng_recrtask/game/components/dot_sprite_component.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';

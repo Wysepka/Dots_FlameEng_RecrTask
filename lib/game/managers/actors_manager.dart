@@ -1,3 +1,4 @@
+import 'package:dots_flameeng_recrtask/core/app_logger.dart';
 import 'package:dots_flameeng_recrtask/game/components/collectible_sprite_component.dart';
 import 'package:dots_flameeng_recrtask/game/components/dot_sprite_component.dart';
 import 'package:dots_flameeng_recrtask/game/components/enemy_sprite_component.dart';
@@ -21,6 +22,7 @@ class ActorsManager extends Component with HasGameReference<DotsGame>{
   Future<void> onLoad() async{
     Rect cameraBounds = game.camera.visibleWorldRect;
 
+    AppLogger.i("Spawning Player");
     _player = PlayerSpriteComponent(cameraBounds: cameraBounds , callbacksContainer: _playerCallbacksContainer);
     _actorsSpawned.add(_player);
     add(_player);
@@ -59,6 +61,7 @@ class ActorsManager extends Component with HasGameReference<DotsGame>{
   }
 
   void _spawnEnemyDot(){
+    AppLogger.i("Spawning EnemyDot, CurrentActorsCount: ${_actorsSpawned.length}");
     Rect cameraBounds = game.camera.visibleWorldRect;
     DotSpriteComponent enemy = EnemySpriteComponent(_calculateCollectibleSafePosition(cameraBounds) , cameraBounds: cameraBounds);
     _actorsSpawned.add(enemy);
@@ -66,10 +69,15 @@ class ActorsManager extends Component with HasGameReference<DotsGame>{
   }
 
   void _spawnCollectibleDot(){
+    AppLogger.i("Spawning CollectibleDot, CurrentActorsCount: ${_actorsSpawned.length}");
     Rect cameraBounds = game.camera.visibleWorldRect;
     DotSpriteComponent collectible = CollectibleSpriteComponent(_calculateCollectibleSafePosition(cameraBounds), cameraBounds: cameraBounds);
     _actorsSpawned.add(collectible);
     add(collectible);
+  }
+
+  void removeFromSpawnedActors(DotSpriteComponent dotSpriteComponent){
+    _actorsSpawned.remove(dotSpriteComponent);
   }
 
 }

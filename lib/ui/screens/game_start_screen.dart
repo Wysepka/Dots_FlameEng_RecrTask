@@ -1,5 +1,6 @@
 import 'package:dots_flameeng_recrtask/blocs/game_lifecycle/game_lifecycle_bloc.dart';
 import 'package:dots_flameeng_recrtask/blocs/game_lifecycle/game_lifecycle_event.dart';
+import 'package:dots_flameeng_recrtask/core/app_logger.dart';
 import 'package:dots_flameeng_recrtask/ui/widgets/game_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class GameStartScreen extends StatelessWidget{
   }
 
   void _onStartButtonPressed(BuildContext context){
+    AppLogger.i("Start Button pressed, invoking StartGameEvent()");
     context.read<GameLifecycleBloc>().add(StartGameEvent());
   }
   

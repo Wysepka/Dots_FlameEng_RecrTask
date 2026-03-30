@@ -1,5 +1,6 @@
 import 'package:dots_flameeng_recrtask/blocs/game_lifecycle/game_lifecycle_bloc.dart';
 import 'package:dots_flameeng_recrtask/blocs/game_lifecycle/game_lifecycle_event.dart';
+import 'package:dots_flameeng_recrtask/core/app_logger.dart';
 import 'package:dots_flameeng_recrtask/ui/widgets/game_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class GameRestartScreen extends StatelessWidget{
   }
 
   void _onRestartButtonClicked(BuildContext context){
+    AppLogger.i("Restart button clicked , restarting Lifecycle event started");
     context.read<GameLifecycleBloc>().add(RestartingGameEvent());
   }
 

@@ -1,5 +1,4 @@
 import 'package:dots_flameeng_recrtask/game/components/dot_actor_sprite_component.dart';
-import 'package:dots_flameeng_recrtask/game/components/dot_sprite_component.dart';
 import 'package:dots_flameeng_recrtask/game/config/game_constants.dart';
 import 'package:flame/components.dart';
 

@@ -5,11 +5,10 @@ import 'package:flame/extensions.dart';
 
 class DotSpriteComponent extends SpriteComponent with HasGameReference<DotsGame>{
   Rect? _previousVisibleRect;
-  late Rect cameraBounds;
   final double dotDiameter;
 
-  DotSpriteComponent({super.position ,required this.cameraBounds , required this.dotDiameter})
-      : super(
+  DotSpriteComponent({super.position ,required Rect cameraBounds , required this.dotDiameter})
+    : super(
       size: Vector2.all(dotDiameter),
       anchor: Anchor.center);
 

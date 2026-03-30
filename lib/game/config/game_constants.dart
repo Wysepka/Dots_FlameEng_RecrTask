@@ -11,9 +11,14 @@ class GameConstants{
   static const double collectibleSpawnInterval = 2;
   static const double collectibleStartSize = 30;
   static const double collectibleMovingSpeed = 50;
+  static const int collectibleScoreValue = 20;
+  static const double collectiblePlayerIncreaseSizeMutliplier = 1.2;
 
   //Enemy
   static const double enemyStartSize = 30;
   static const double enemyMovingSpeed = 50;
   static const double enemySpawnInterval = 2;
+
+  //Other
+  static const double enemyCollisionInterval = 2;
 }

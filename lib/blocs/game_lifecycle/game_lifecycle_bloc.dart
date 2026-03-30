@@ -1,5 +1,4 @@
 import 'package:dots_flameeng_recrtask/core/enums_container.dart';
-
 import 'game_lifecycle_event.dart';
 import 'game_lifecycle_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +19,9 @@ class GameLifecycleBloc extends Bloc<GameLifecycleEvent, GameLifecycleState>{
     });
     on<RestartGameEvent>((event, emit){
       emit(GameLifecycleState(lifecycleType: GameLifecycleType.restart));
+    });
+    on<RestartingGameEvent>((event, emit){
+      emit(GameLifecycleState(lifecycleType: GameLifecycleType.restarting));
     });
   }
 

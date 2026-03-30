@@ -6,8 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class GameStatsBloc extends Bloc<GameStatsEvent, GameStatsState>{
   GameStatsBloc()
     : super(const GameStatsState(GameConstants.playerStartLivesCount, 0)){
-    on<PlayerHealthDown>((event, emit){
-      emit(GameStatsState(1, 1));
+    on<PlayerHealthDecrementEvent>((event, emit){
+      emit(GameStatsState(state.currentPlayerLives - 1, state.currentPlayerScore));
+    });
+    on<PlayerScoreUpEvent>((event, emit){
+      emit(GameStatsState(state.currentPlayerLives, state.currentPlayerScore + GameConstants.collectibleScoreValue));
+    });
+    on<ResetGameStatsEvent>((event, emit){
+      emit(GameStatsState(GameConstants.playerStartLivesCount, 0));
     });
   }
 

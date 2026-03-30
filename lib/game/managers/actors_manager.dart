@@ -3,6 +3,7 @@ import 'package:dots_flameeng_recrtask/game/components/dot_sprite_component.dart
 import 'package:dots_flameeng_recrtask/game/components/enemy_sprite_component.dart';
 import 'package:dots_flameeng_recrtask/game/components/player_sprite_component.dart';
 import 'package:dots_flameeng_recrtask/game/config/game_constants.dart';
+import 'package:dots_flameeng_recrtask/game/containers/PlayerCallbacksContainer.dart';
 import 'package:dots_flameeng_recrtask/game/dots_game.dart';
 import 'package:dots_flameeng_recrtask/game/utility/position_utility.dart';
 import 'package:flame/components.dart';
@@ -10,32 +11,35 @@ import 'package:flame/extensions.dart';
 
 class ActorsManager extends Component with HasGameReference<DotsGame>{
 
-  List<DotSpriteComponent> actorsSpawned = [];
-  late PlayerSpriteComponent player;
+  List<DotSpriteComponent> _actorsSpawned = [];
+  late PlayerSpriteComponent _player;
+  final PlayerCallbacksContainer _playerCallbacksContainer;
+
+  ActorsManager(this._playerCallbacksContainer);
 
   @override
   Future<void> onLoad() async{
     Rect cameraBounds = game.camera.visibleWorldRect;
 
-    player = PlayerSpriteComponent(cameraBounds: cameraBounds);
-    actorsSpawned.add(player);
-    add(player);
+    _player = PlayerSpriteComponent(cameraBounds: cameraBounds , callbacksContainer: _playerCallbacksContainer);
+    _actorsSpawned.add(_player);
+    add(_player);
 
     add(TimerComponent(
         period: GameConstants.enemySpawnInterval,
         repeat: true,
-        onTick: spawnEnemyDot
+        onTick: _spawnEnemyDot
     ));
 
     add(TimerComponent(
         period: GameConstants.collectibleSpawnInterval,
         repeat: true,
-        onTick: spawnCollectibleDot
+        onTick: _spawnCollectibleDot
     ));
   }
 
-  Vector2 calculateCollectibleSafePosition(Rect bounds){
-    List<DotTransform> dotTransforms = actorsSpawned.map(
+  Vector2 _calculateCollectibleSafePosition(Rect bounds){
+    List<DotTransform> dotTransforms = _actorsSpawned.map(
       (component) => DotTransform(
           position: component.position.clone(),
           size: component.size.clone())
@@ -49,22 +53,22 @@ class ActorsManager extends Component with HasGameReference<DotsGame>{
       spawnAreaSize: spawnAreaSize,
       newDotSize: Vector2.all(GameConstants.enemyStartSize),
       existingDots: dotTransforms,
-      safeCircularPosition: player.position.clone(),
-      safeCircularSize: player.size.x,
+      safeCircularPosition: _player.position.clone(),
+      safeCircularSize: _player.size.x,
     );
   }
 
-  void spawnEnemyDot(){
+  void _spawnEnemyDot(){
     Rect cameraBounds = game.camera.visibleWorldRect;
-    DotSpriteComponent enemy = EnemySpriteComponent(calculateCollectibleSafePosition(cameraBounds) , cameraBounds: cameraBounds);
-    actorsSpawned.add(enemy);
+    DotSpriteComponent enemy = EnemySpriteComponent(_calculateCollectibleSafePosition(cameraBounds) , cameraBounds: cameraBounds);
+    _actorsSpawned.add(enemy);
     add(enemy);
   }
 
-  void spawnCollectibleDot(){
+  void _spawnCollectibleDot(){
     Rect cameraBounds = game.camera.visibleWorldRect;
-    DotSpriteComponent collectible = CollectibleSpriteComponent(calculateCollectibleSafePosition(cameraBounds), cameraBounds: cameraBounds);
-    actorsSpawned.add(collectible);
+    DotSpriteComponent collectible = CollectibleSpriteComponent(_calculateCollectibleSafePosition(cameraBounds), cameraBounds: cameraBounds);
+    _actorsSpawned.add(collectible);
     add(collectible);
   }
 

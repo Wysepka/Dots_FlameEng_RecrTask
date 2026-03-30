@@ -8,11 +8,14 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 
 class DotActorSpriteComponent extends DotSpriteComponent with CollisionCallbacks{
-  DotActorSpriteComponent(this.initialPosition, {required super.cameraBounds, required super.dotDiameter});
+  DotActorSpriteComponent(this._initialPosition, {required super.cameraBounds, required super.dotDiameter});
 
-  final Vector2 initialPosition;
-  late Vector2 velocity;
+  final Vector2 _initialPosition;
+  late Vector2 _velocity;
   late double movingSpeed;
+  bool _isDead = false;
+
+  bool get isDead => _isDead;
 
   @override
   Future<void> onLoad() async{
@@ -22,13 +25,13 @@ class DotActorSpriteComponent extends DotSpriteComponent with CollisionCallbacks
 
     Random random = Random();
 
-    velocity = Vector2(random.nextDouble() , random.nextDouble());
-    position = initialPosition;
+    _velocity = Vector2(random.nextDouble() , random.nextDouble());
+    position = _initialPosition;
   }
 
   @override
   void update(double dt){
-    position += velocity * dt * GameConstants.enemyMovingSpeed;
+    position += _velocity * dt * GameConstants.enemyMovingSpeed;
   }
 
   @override
@@ -39,10 +42,10 @@ class DotActorSpriteComponent extends DotSpriteComponent with CollisionCallbacks
 
       Rect screenBounds = game.camera.visibleWorldRect;
 
-      velocity = CollisionUtility.calculateBounceVelocityFromScreenHitbox(
+      _velocity = CollisionUtility.calculateBounceVelocityFromScreenHitbox(
           position: position,
           componentSize: size,
-          velocity: velocity,
+          velocity: _velocity,
           screenRect: screenBounds
       );
 
@@ -53,13 +56,21 @@ class DotActorSpriteComponent extends DotSpriteComponent with CollisionCallbacks
       );
     }
     else if(other is DotActorSpriteComponent){
-      velocity = CollisionUtility.calculateBounceVelocityFromActor(
+      _velocity = CollisionUtility.calculateBounceVelocityFromActor(
           selfPosition: position,
           selfSize: size,
           otherPosition: other.position,
           otherSize: other.size,
-          velocity: velocity
+          velocity: _velocity
       );
     }
+  }
+
+  void onPlayerCollided(){
+    if(_isDead){
+      return;
+    }
+    _isDead = true;
+    removeFromParent();
   }
 }
